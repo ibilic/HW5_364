@@ -63,7 +63,6 @@ class TodoListForm(FlaskForm):
     items = TextAreaField("Enter your TODO list items in the following format: Description, Priority -- separated by newlines")
     submit = SubmitField("Submit")
 
-# TODO 364: Define an UpdateButtonForm class for use to update todo items
 class UpdateButtonForm(FlaskForm):
     submit = SubmitField('Update')
 
@@ -73,14 +72,6 @@ class UpdateInfoForm(FlaskForm):
 
 class DeleteButtonForm(FlaskForm):
     submit = SubmitField('Delete')
-
-
-# TODO 364: Define a form class for updating the priority of a todolist item
-#(HINT: What class activity you have done before is this similar to?)
-
-
-# TODO 364: Define a DeleteButtonForm class for use to delete todo items
-
 
 
 ################################
@@ -127,31 +118,20 @@ def index():
         return redirect(url_for('all_lists'))
     return render_template('index.html',form=form)
 
-# Provided - see below for additional TODO
 @app.route('/all_lists',methods=["GET","POST"])
 def all_lists():
     form = DeleteButtonForm()
     lsts = TodoList.query.all()
     return render_template('all_lists.html',todo_lists=lsts, form=form)
 
-# TODO 364: Update the all_lists.html template and the all_lists view function such that there is
-# a delete button available for each ToDoList saved.
-# When you click on the delete button for each list, that list should get deleted -- this is also addressed in a later TODO.
 
-# Provided - see below for additional TODO
 @app.route('/list/<ident>',methods=["GET","POST"])
 def one_list(ident):
     form = UpdateButtonForm()
     lst = TodoList.query.filter_by(id=ident).first()
     item = lst.items.all()
     return render_template('list_tpl.html',todolist=lst,items=item,form=form)
-# TODO 364: Update the one_list view function and the list_tpl.html view file so that there is an Update button next to each
-#todolist item, and the priority integer of that item can be updated. (This is also addressed in later TODOs.)
-# HINT: These template updates are minimal, but that small update(s) make(s) a big change in what you can do in the app!
-#Check out the examples from previous classes for help.
 
-
-# TODO 364: Complete route to update an individual ToDo item's priority
 @app.route('/update/<item>',methods=["GET","POST"])
 def update(item):
     print(item)
@@ -166,15 +146,6 @@ def update(item):
     return render_template('update_item.html', form = form)
 
 
-    pass # Replace with code
-    # This code should use the form you created above for updating the specific item and manage the process of updating the item's priority.
-    # Once it is updated, it should redirect to the page showing all the links to todo lists.
-    # It should flash a message: Updated priority of <the description of that item>
-    # HINT: What previous class example is extremely similar?
-
-# TODO 364: Fill in the update_item.html template to work properly with this update route. (HINT: Compare against example!)
-
-# TODO 364: Complete route to delete a whole ToDoList
 @app.route('/delete/<lst>',methods=["GET","POST"])
 def delete(lst):
     list = TodoList.query.filter_by(title=lst).first()
@@ -182,10 +153,6 @@ def delete(lst):
     db.session.commit()
     flash("Successfully deleted {}".format(lst))
     return redirect(url_for('all_lists'))
-    # This code should successfully delete the appropriate todolist
-    # Should flash a message about what was deleted, e.g. Deleted list <title of list>
-    # And should redirect the user to the page showing all the todo lists
-    # HINT: Compare against what you've done for updating and class notes -- the goal here is very similar, and in some ways simpler.
 
 if __name__ == "__main__":
     db.create_all()
